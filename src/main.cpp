@@ -2,86 +2,112 @@
 #include "player.hpp"
 #include "map.hpp"
 
-int main() 
+enum class GameState
 {
+    MENU,
+    GAMEPLAY,
+    GAMEOVER,
+    QUIT
+};
 
-    // Initialization
+GameState gameState = GameState::MENU;
+
+void UpdateQuit() {
+    const char* text = "Are you sure you want to exit? Y/N";
+    int textWidth = MeasureText(text, 20);
+    int textX = GetScreenWidth() / 2 - textWidth / 2;
+    int textY = GetScreenHeight() / 2;
+    DrawText(text, textX, textY, 20, WHITE);
+    if (IsKeyPressed(KEY_Y)) {
+        CloseWindow();
+    }
+    if (IsKeyPressed(KEY_N)) {
+        gameState = GameState::MENU;
+    }
+}
+
+void UpdateMenu() {
+    const char* text = "Press ENTER to start";
+    int textWidth = MeasureText(text, 20);
+    int textX = GetScreenWidth() / 2 - textWidth / 2;
+    int textY = GetScreenHeight() / 2;
+    DrawText(text, textX, textY, 20, WHITE);
+    if (IsKeyPressed(KEY_ENTER)) {
+        gameState = GameState::GAMEPLAY;
+    }
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        gameState = GameState::QUIT;
+    }
+}
+
+void UpdateGameplay(Player& player, TileMap& map) {
+    map.Draw();
+    player.Update();
+    player.Draw();
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        gameState = GameState::MENU;
+    }
+}
+
+void UpdateGameOver() {
+    const char* text = "Game Over";
+    int textWidth = MeasureText(text, 20);
+    int textX = GetScreenWidth() / 2 - textWidth / 2;
+    int textY = GetScreenHeight() / 2;
+    DrawText(text, textX, textY, 20, WHITE);
+    if (IsKeyPressed(KEY_ENTER))   {
+        gameState = GameState::MENU;
+    }
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        gameState = GameState::QUIT;
+    }
+}
+
+int main() {
     const int screenWidth = 800;
     const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "Window");
+    InitWindow(screenWidth, screenHeight, "RPG");
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);
 
-    bool exitWindowRequested = false;
-    bool isInMenu = true;
-    bool fullScreen = false;
-
-    TileMap tileMap;
     Player player;
+    TileMap map;
 
-    while (!WindowShouldClose()) 
-    {
-        if(WindowShouldClose() || IsKeyPressed(KEY_ESCAPE)) exitWindowRequested = true; 
+    bool fullScren = false;
 
-        if(isInMenu && !exitWindowRequested) {
-            if(IsKeyPressed(KEY_ENTER)) {
-                isInMenu = false;
-            }
-        }
-        else if (!isInMenu && !exitWindowRequested) {
-            if(IsKeyPressed(KEY_ESCAPE)) {
-                isInMenu = true;
-            }
-        }
-
-        if(IsKeyPressed(KEY_F)) {
-            if(fullScreen) {
-                fullScreen = false;
-                ToggleFullscreen();
-            }
-            else {
-                fullScreen = true;
-                ToggleFullscreen();
-            }
-        }
-
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        // Get the current screen width and height
-        int screenWidth = GetScreenWidth();
-        int screenHeight = GetScreenHeight();
-
-        // Exit Window Logic
-        if(exitWindowRequested) {
-            DrawText("Are you sure you want to exit? (y/n)", 10, 10, 20, WHITE);
-            if(IsKeyPressed(KEY_Y)) {
-                break;
+        if(IsKeyPressed(KEY_F)) {
+            if(fullScren) {
+                fullScren = false;
+                SetWindowSize(800, 450);
+            } else {
+                fullScren = true;
+                SetWindowSize(GetMonitorWidth(0), GetMonitorHeight(0));
             }
-            if(IsKeyPressed(KEY_N)) {
-                exitWindowRequested = false;
-            }
-        } else if(isInMenu) {
-            // Menu logic
-            int textWidth = MeasureText("Press Enter to Start", 20);
-            int textX = (screenWidth - textWidth) / 2;
-            int textY = screenHeight / 2;
-            DrawText("Press Enter to Start", textX, textY, 20, WHITE);
         }
-        else {
-            // Game logic
-            DrawText("Game", 10, 30, 20, WHITE);
-            tileMap.Draw();
-            player.Draw(), player.Update();
+
+        switch (gameState) {
+            case GameState::MENU:
+                UpdateMenu();
+                break;
+            case GameState::GAMEPLAY:
+                UpdateGameplay(player, map);
+                break;
+            case GameState::GAMEOVER: 
+                UpdateGameOver();
+                break;
+            case GameState::QUIT:
+                UpdateQuit();
+                break;
         }
 
         EndDrawing();
-
-
-    }
+        }
     
-    CloseWindow();
-
-    return 0;
+        CloseWindow();
+        return 0;
 }

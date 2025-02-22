@@ -6,11 +6,22 @@ TileMap::TileMap() {
     tileY = 0;
     tileWidth = 32;
     tileHeight = 32;
-    tileset = LoadTexture("assets/Tiles/Grass_Middle.png");
+    tileset = LoadTexture("assets/Tiles/Grass.png");
+    if (tileset.id == 0) {
+        TraceLog(LOG_ERROR, "Failed to load texture: assets/Tiles/Grass.png");
+    } else {
+        TraceLog(LOG_INFO, "Texture loaded successfully: assets/Tiles/Grass.png");
+    }
 }
 
 void TileMap::Draw() {
     //DrawTexture(tileset, tileX, tileY, WHITE);
+
+    if(tileset.id == 0) {
+        TraceLog(LOG_ERROR, "Failed to draw texture: assets/Tiles/Grass.png");
+    } else {
+        TraceLog(LOG_INFO, "Texture drawn successfully: assets/Tiles/Grass.png");
+    }
 
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
@@ -23,5 +34,10 @@ void TileMap::Draw() {
 }
 
 TileMap::~TileMap() {
-    UnloadTexture(tileset);
+    if(tileset.id != 0) {
+        UnloadTexture(tileset);
+        TraceLog(LOG_INFO, "Texture unloaded successfully: assets/Tiles/Grass.png");
+    } else {
+        TraceLog(LOG_ERROR, "Failed to unload texture: assets/Tiles/Grass.png");
+    }
 }
