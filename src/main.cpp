@@ -1,7 +1,8 @@
 #include <raylib.h>
-#include "player.hpp"
-#include "map.hpp"
+#include "headers/player.hpp"
+#include "headers/map.hpp"
 
+// Enumeration for game states
 enum class GameState
 {
     MENU,
@@ -10,6 +11,7 @@ enum class GameState
     QUIT
 };
 
+// Initial game state
 GameState gameState = GameState::MENU;
 
 void UpdateQuit() {
@@ -40,10 +42,11 @@ void UpdateMenu() {
     }
 }
 
+// Need to pass player and map by reference to update them
 void UpdateGameplay(Player& player, TileMap& map) {
     map.Draw();
-    player.Update();
-    player.Draw();
+    player.Draw(), player.Update();
+
     if (IsKeyPressed(KEY_ESCAPE)) {
         gameState = GameState::MENU;
     }
@@ -64,33 +67,36 @@ void UpdateGameOver() {
 }
 
 int main() {
+
+    // Initialization
     const int screenWidth = 800;
     const int screenHeight = 450;
 
     InitWindow(screenWidth, screenHeight, "RPG");
     SetTargetFPS(60);
     SetExitKey(KEY_NULL);
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
 
+    InitAudioDevice();
+
+    // Create player and map
     Player player;
     TileMap map;
 
-    bool fullScren = false;
+    bool fullScreen = false;
 
+    // Main game loop
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        if(IsKeyPressed(KEY_F)) {
-            if(fullScren) {
-                fullScren = false;
-                SetWindowSize(800, 450);
-            } else {
-                fullScren = true;
-                SetWindowSize(GetMonitorWidth(0), GetMonitorHeight(0));
-            }
+        if (IsKeyPressed(KEY_F)) {
+            ToggleFullscreen();
+            fullScreen = !fullScreen;
         }
 
-        switch (gameState) {
+        // Update game state
+        switch (gameState) { 
             case GameState::MENU:
                 UpdateMenu();
                 break;
@@ -106,8 +112,11 @@ int main() {
         }
 
         EndDrawing();
+
         }
-    
+        
+        CloseAudioDevice();
+
         CloseWindow();
         return 0;
 }

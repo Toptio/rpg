@@ -9,6 +9,9 @@
 		"**/*.exe": true,
 	},
 	"files.associations": {
-		"*.m": "cpp"
+		"*.m": "cpp",
+		"ostream": "cpp",
+		"vector": "cpp",
+		"aseprite.h": "c"
 	}
 }
