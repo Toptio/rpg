@@ -4,8 +4,6 @@
 
 Player::Player() {
     texture = LoadTexture("assets/player/Soldier-idle.png");
-    width = 32;
-    height = 32;
     frameWidth = texture.width / 6;
     frameHeight = texture.height;
     position.x = GetScreenWidth() / 2 - frameWidth / 2;
@@ -18,21 +16,24 @@ Player::Player() {
 
 void Player::Draw() {
     //DrawRectangle(position.x, position.y, width, height, WHITE);
+    /*Rectangle destRec = { position.x, position.y, 32, 32 };
+    Vector2 origin = { 0, 0 };
+    DrawTexturePro(texture, frameRec, destRec, origin, 0.0f, WHITE); */
     DrawTextureRec(texture, frameRec, position, WHITE);
 }   
 
 void Player::Update(){
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) {
-        y -= 5;
+        position.y -= 5;
     }
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) {
-        y += 5;
+        position.y += 5;
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
-        x -= 5;
+        position.x -= 5;
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
-        x += 5;
+        position.x += 5;
     }
 
     framesCounter += GetFrameTime() * frameSpeed;

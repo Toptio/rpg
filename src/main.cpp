@@ -109,8 +109,9 @@ int main() {
             case GameState::QUIT:
                 UpdateQuit();
                 break;
-        }
 
+        
+        }
         EndDrawing();
 
         }

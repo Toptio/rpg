@@ -13,14 +13,12 @@ class Player {
         void Draw();
         Vector2 position;
     private:
-        float x, y;
-        int width, height;
+        Texture2D texture;  
         int frameWidth, frameHeight;
         int currentFrame;
         int framesCounter;
         int frameSpeed;
-        Rectangle frameRec = { 0.0f, 0.0f, (float)frameWidth, (float)frameHeight };
-        Texture2D texture;  
+        Rectangle frameRec;
 };
 
 #endif
