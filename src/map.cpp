@@ -1,5 +1,5 @@
-#include "headers/map.hpp"
 #include <raylib.h>
+#include "headers/map.hpp"
 
 TileMap::TileMap() {
     tileX = 0;
@@ -7,6 +7,10 @@ TileMap::TileMap() {
     tileWidth = 32;
     tileHeight = 32;
     tileset = LoadTexture("assets/tiles/Grass.png");
+}
+
+TileMap::~TileMap() {
+    UnloadTexture(tileset);
 }
 
 void TileMap::Draw() {
@@ -19,8 +23,6 @@ void TileMap::Draw() {
     Vector2 origin = { 0.0f, 0.0f };
 
     DrawTexturePro(tileset, sourceRec, destRec, origin, 0.0f, WHITE); 
-}
 
-TileMap::~TileMap() {
-    UnloadTexture(tileset);
+    DrawRectangle(0, 0, 32, 32, WHITE);
 }

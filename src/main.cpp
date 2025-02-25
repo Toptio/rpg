@@ -15,6 +15,7 @@ enum class GameState
 GameState gameState = GameState::MENU;
 
 void UpdateQuit() {
+    DrawFPS(10, 10);
     const char* text = "Are you sure you want to exit? Y/N";
     int textWidth = MeasureText(text, 20);
     int textX = GetScreenWidth() / 2 - textWidth / 2;
@@ -29,6 +30,7 @@ void UpdateQuit() {
 }
 
 void UpdateMenu() {
+    DrawFPS(10, 10);
     const char* text = "Press ENTER to start";
     int textWidth = MeasureText(text, 20);
     int textX = GetScreenWidth() / 2 - textWidth / 2;
@@ -44,6 +46,7 @@ void UpdateMenu() {
 
 // Need to pass player and map by reference to update them
 void UpdateGameplay(Player& player, TileMap& map) {
+    DrawFPS(10, 10);
     map.Draw();
     player.Draw(), player.Update();
 
@@ -53,6 +56,7 @@ void UpdateGameplay(Player& player, TileMap& map) {
 }
 
 void UpdateGameOver() {
+    DrawFPS(10, 10);
     const char* text = "Game Over";
     int textWidth = MeasureText(text, 20);
     int textX = GetScreenWidth() / 2 - textWidth / 2;
@@ -87,13 +91,14 @@ int main() {
 
     // Main game loop
     while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(BLACK);
 
         if (IsKeyPressed(KEY_F)) {
             ToggleFullscreen();
             fullScreen = !fullScreen;
         }
+
+        BeginDrawing();
+        ClearBackground(BLACK);
 
         // Update game state
         switch (gameState) { 
@@ -109,12 +114,10 @@ int main() {
             case GameState::QUIT:
                 UpdateQuit();
                 break;
-
-        
         }
+
         EndDrawing();
-
-        }
+    }
         
         CloseAudioDevice();
 

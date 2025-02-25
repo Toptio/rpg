@@ -3,6 +3,7 @@
 
 #pragma once
 #include <raylib.h>
+#include "include/Animator.h"
 
 
 class Player {
@@ -13,12 +14,9 @@ class Player {
         void Draw();
         Vector2 position;
     private:
-        Texture2D texture;  
         int frameWidth, frameHeight;
-        int currentFrame;
-        int framesCounter;
-        int frameSpeed;
-        Rectangle frameRec;
+        Texture2D playerIdle;
+        Animator playerIdleAnim{"PlayerIdle", 6, 1, 5};
 };
 
 #endif
